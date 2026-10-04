@@ -5444,6 +5444,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Minion
       objectReference: {fileID: 0}
+    - target: {fileID: 5029105942933849637, guid: fcedc3048ccaf234b8c7edf81f5e40bd, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 5922016473361967775, guid: fcedc3048ccaf234b8c7edf81f5e40bd, type: 3}
       propertyPath: player
       value: 
