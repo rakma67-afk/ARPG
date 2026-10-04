@@ -7,6 +7,10 @@ public class PlayerController : MonoBehaviour
     private NavMeshAgent agent;
     private Camera mainCamera;
 
+    Animator animator;
+    CharacterController characterController;
+
+
     [Header("Player Stats (ตาม GDD)")]
     public float maxHp = 100f;
     public float maxMana = 100f;
@@ -58,6 +62,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         mainCamera = Camera.main;
 
@@ -69,6 +74,11 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetMouseButtonDown(0))
+        {
+            animator.SetBool("moving", true);
+        }
+
         if (isRolling) return;
 
         UpdateSkillCooldowns();
@@ -79,6 +89,7 @@ public class PlayerController : MonoBehaviour
         HandleSkills(); // ตรวจสอบการกดใช้สกิล
         RegenerateStamina();
     }
+
     void UpdateSkillCooldowns()
     {
         // นับเวลาถอยหลัง Cooldown ของแต่ละสกิล
@@ -194,6 +205,12 @@ public class PlayerController : MonoBehaviour
                 {
                     targetEnemy = null; // ยกเลิกการล็อคเป้า
                     agent.SetDestination(hit.point); // เดินไปที่พื้น
+                    if (agent.transform.position == hit.point)
+                    {
+                        animator.SetBool("moving", false);
+                    }
+                    Debug.Log("ตำแหน่ง "+ agent.transform.position);
+                    Debug.Log("hit "+ hit.point);
                 }
             }
         }
