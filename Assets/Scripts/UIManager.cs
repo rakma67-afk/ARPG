@@ -63,7 +63,7 @@ public class UIManager : MonoBehaviour
     public void TriggerGameOver()
     {
         if (gameOverPanel != null) gameOverPanel.SetActive(true);
-        Time.timeScale = 0f; // หยุดเวลาในเกมทั้งหมด
+        //Time.timeScale = 0f; // หยุดเวลาในเกมทั้งหมด
     }
     public void TriggerVictory()
     {

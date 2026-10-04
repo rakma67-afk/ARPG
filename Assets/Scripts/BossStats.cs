@@ -3,6 +3,8 @@ using UnityEngine.AI;
 
 public class BossStats : MonoBehaviour
 {
+    Animator animator;
+
     [Header("Boss Stats (ตาม GDD)")]
     public string bossName = "Boss";
     public float health = 500f; //
@@ -30,6 +32,7 @@ public class BossStats : MonoBehaviour
 
     void Start()
     {
+        animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         if (agent != null) agent.speed = speed;
 
@@ -57,6 +60,8 @@ public class BossStats : MonoBehaviour
         // ถ้าบอสตื่นแล้ว (Aggro)
         if (isAggroed)
         {
+            animator.SetBool("agro", true);
+
             // --- ระบบต่อสู้ ---
             if (distanceToPlayer <= attackRange)
             {
@@ -110,6 +115,7 @@ public class BossStats : MonoBehaviour
     {
         lastAttackTime = Time.time;
         transform.LookAt(player.position);
+        animator.SetTrigger("hit");
         Debug.Log($"{bossName} ทุบผู้เล่น! สร้างความเสียหาย {damage}");
 
         PlayerController pController = player.GetComponent<PlayerController>();

@@ -3,6 +3,8 @@ using UnityEngine.AI;
 
 public class EnemyStats : MonoBehaviour
 {
+    Animator animator;
+
     [Header("Stats (ตาม GDD)")]
     public string enemyName = "Minion";
     public float health = 50f; //[cite: 2]
@@ -24,6 +26,7 @@ public class EnemyStats : MonoBehaviour
 
     void Start()
     {
+        animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         if (agent != null) agent.speed = speed;
 
@@ -50,6 +53,7 @@ public class EnemyStats : MonoBehaviour
         // ถ้าโกรธแล้ว ให้เริ่มทำงาน (วิ่งตาม/โจมตี)
         if (isAggroed)
         {
+            animator.SetBool("agro", true);
             if (distanceToPlayer <= attackRange)
             {
                 agent.ResetPath(); // หยุดเดินเมื่อเข้าสู่ระยะฟัน
@@ -86,6 +90,7 @@ public class EnemyStats : MonoBehaviour
     {
         lastAttackTime = Time.time;
         transform.LookAt(player.position); // หันหน้าหาผู้เล่นตอนตี
+        animator.SetTrigger("hit");
         Debug.Log($"{enemyName} โจมตีผู้เล่น! สร้างความเสียหาย {damage}");
 
         // ส่งดาเมจไปที่สคริปต์ PlayerController

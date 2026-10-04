@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour
     private NavMeshAgent agent;
     private Camera mainCamera;
 
+    Animator animator;
+
     [Header("Player Stats (ตาม GDD)")]
     public float maxHp = 100f;
     public float maxMana = 100f;
@@ -58,6 +60,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         mainCamera = Camera.main;
 
@@ -69,6 +72,17 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (!agent.pathPending)
+        {
+            if (agent.remainingDistance <= agent.stoppingDistance)
+            {
+                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
+                {
+                    animator.SetBool("moving", false);
+                }
+            }
+        }
+
         if (isRolling) return;
 
         UpdateSkillCooldowns();
@@ -79,6 +93,7 @@ public class PlayerController : MonoBehaviour
         HandleSkills(); // ตรวจสอบการกดใช้สกิล
         RegenerateStamina();
     }
+
     void UpdateSkillCooldowns()
     {
         // นับเวลาถอยหลัง Cooldown ของแต่ละสกิล
@@ -98,12 +113,14 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.S) && skill2Timer <= 0 && currentMana >= skill2ManaCost)
         {
             UseSkill2SlashingWave();
+            animator.SetTrigger("skill2");
         }
 
         // Skill 3: Sweeping edge (ปุ่ม D)[cite: 2, 3]
         if (Input.GetKeyDown(KeyCode.D) && skill3Timer <= 0 && currentMana >= skill3ManaCost)
         {
             UseSkill3SweepingEdge();
+            animator.SetTrigger("skill3");
         }
     }
     IEnumerator Skill1DashRoutine()
@@ -184,6 +201,7 @@ public class PlayerController : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
+                animator.SetBool("moving", true);
                 // ถ้าคลิกโดนศัตรู
                 if (hit.collider.CompareTag("Enemy"))
                 {
@@ -194,6 +212,9 @@ public class PlayerController : MonoBehaviour
                 {
                     targetEnemy = null; // ยกเลิกการล็อคเป้า
                     agent.SetDestination(hit.point); // เดินไปที่พื้น
+                    
+                    Debug.Log("ตำแหน่ง "+ agent.transform.position);
+                    Debug.Log("hit "+ hit.point);
                 }
             }
         }
@@ -232,6 +253,10 @@ public class PlayerController : MonoBehaviour
         // หันหน้าหาศัตรูตอนฟัน
         transform.LookAt(targetEnemy.transform.position);
 
+        if (animator != null)
+        {
+            animator.SetTrigger("attack");
+        }
         // เรียกฟังก์ชันเสียเลือดของศัตรู
         EnemyStats stats = targetEnemy.GetComponent<EnemyStats>();
         if (stats != null)
@@ -254,6 +279,7 @@ public class PlayerController : MonoBehaviour
         {
             targetEnemy = null; // ยกเลิกเป้าหมายถ้ากลิ้งหลบ
             StartCoroutine(RollRoutine());
+            animator.SetTrigger("dodge");
         }
     }
 
@@ -310,6 +336,14 @@ public class PlayerController : MonoBehaviour
             {
                 uiManager.TriggerGameOver();
             }
+            animator.SetTrigger("dead");
+            agent.isStopped = true; // สั่งให้ NavMeshAgent เบรกกะทันหัน
+            this.enabled = false; // ปิดสคริปต์ตัวนี้ทิ้ง เพื่อไม่ให้รับคำสั่งเมาส์หรือสกิลใดๆ อีก
+            
+        }
+        else
+        {
+            animator.SetTrigger("hit");
         }
     }
     public void GainExpAndMoney(float expAmount, int moneyAmount)
