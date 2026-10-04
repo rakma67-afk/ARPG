@@ -1,7 +1,14 @@
 fileFormatVersion: 2
 guid: dce280ced5e006c4cb0eb0fab2f51b75
+AssetOrigin:
+  serializedVersion: 1
+  productId: 65284
+  packageName: RPG Character Mecanim Animation Pack FREE
+  packageVersion: 2.5.2
+  assetPath: Assets/ExplosiveLLC/RPG Character Mecanim Animation Pack FREE/Animations/2Hand-Sword/RPG-Character@2Hand-Sword-Attack1.FBX
+  uploadId: 754614
 ModelImporter:
-  serializedVersion: 22200
+  serializedVersion: 24600
   internalIDToNameTable:
   - first:
       1: 100000
@@ -723,6 +730,7 @@ ModelImporter:
     materialName: 0
     materialSearch: 1
     materialLocation: 0
+    searchTexturesGlobally: 1
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
@@ -730,11 +738,9 @@ ModelImporter:
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
     motionNodeName: Motion
-    rigImportErrors: 
-    rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: "\nClip 'Take 001' has import animation warnings that might lower retargeting quality:\nNote: Activate translation DOF on avatar to improve retargeting quality.\n\t'B_Spine' has translation animation that will be discarded.\n"
-    animationRetargetingWarnings: "\nRetargeting quality report for clip 'Take 001':\n\tLeftUpperArm average position error 8.8 mm and maximum position error 20.4 mm at time 0: 0 (0.0%) Frame 0\n\tLeftLowerArm average position error 8.8 mm and maximum position error 20.4 mm at time 1: 6 (100.0%) Frame 36\n\tLeftHand average position error 8.8 mm and maximum position error 20.4 mm at time 1: 6 (100.0%) Frame 36\n\tRightUpperArm average position error 8.8 mm and maximum position error 20.4 mm at time 0: 0 (0.0%) Frame 0\n\tRightLowerArm average position error 8.8 mm and maximum position error 20.4 mm at time 1: 6 (100.0%) Frame 36\n\tRightHand average position error 8.8 mm and maximum position error 20.4 mm at time 0: 0 (0.0%) Frame 0\n\tHead average position error 8.9 mm and maximum position error 20.4 mm at time 0: 0 (0.0%) Frame 0\n"
+    animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
@@ -768,16 +774,9 @@ ModelImporter:
       keepOriginalPositionXZ: 1
       heightFromFeet: 0
       mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000u
       curves: []
-      events:
-      - time: 0.4217231
-        functionName: Hit
-        data: 
-        objectReferenceParameter: {instanceID: 0}
-        floatParameter: 0
-        intParameter: 0
-        messageOptions: 0
+      events: []
       transformMask: []
       maskType: 3
       maskSource: {fileID: 101100000, guid: 4ebc95c8618479f4d8251c7dafa10029, type: 2}
@@ -790,6 +789,8 @@ ModelImporter:
     addColliders: 0
     useSRGBMaterialColor: 1
     sortHierarchyByName: 1
+    preBakeConvexCollisionMesh: 0
+    preBakeTriangleCollisionMesh: 0
     importPhysicalCameras: 1
     importVisibility: 0
     importBlendShapes: 0
@@ -808,6 +809,11 @@ ModelImporter:
     maxBonesPerVertex: 4
     minBoneWeight: 0.001
     optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
+    importUVs: -1
+    importVertexColors: 1
     meshOptimizationFlags: 0
     indexFormat: 0
     secondaryUVAngleDistortion: 8
@@ -827,6 +833,7 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
     blendShapeNormalImportMode: 2
     normalSmoothingSource: 0
+    calculateBlendshapeNormalsDeltaFromImportedNormals: 1
   referencedClips: []
   importAnimation: 1
   humanDescription:
@@ -1548,10 +1555,3 @@ ModelImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-AssetOrigin:
-  serializedVersion: 1
-  productId: 65284
-  packageName: RPG Character Mecanim Animation Pack FREE
-  packageVersion: 2.5.2
-  assetPath: Assets/ExplosiveLLC/RPG Character Mecanim Animation Pack FREE/Animations/2Hand-Sword/RPG-Character@2Hand-Sword-Attack1.FBX
-  uploadId: 754614
