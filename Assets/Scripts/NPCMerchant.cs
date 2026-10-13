@@ -9,9 +9,9 @@ public class NPCMerchant : MonoBehaviour
     public GameObject shopPanel; // นำ NPCShopPanel มาใส่ช่องนี้
 
     [Header("Shop Prices")]
-    public int weaponUpgradeCost = 50;
-    public int armorUpgradeCost = 50;
-    public int buffCost = 20;
+    public int weaponUpgradeCost = 200;
+    public int armorUpgradeCost = 200;
+    public int buffCost = 50;
 
     void Start()
     {
@@ -52,6 +52,8 @@ public class NPCMerchant : MonoBehaviour
             else { tier = "เลิศ"; attackBonus = 25f; }
 
             player.normalAttackDamage += attackBonus;
+            player.skill2Damage += attackBonus;
+            player.skill3Damage += attackBonus;
             Debug.Log($"อัปเกรดอาวุธสำเร็จ! [{tier}] พลังโจมตี +{attackBonus}"); // อัพเกรดอาวุธที่ NPC[cite: 1]
         }
     }
@@ -80,9 +82,9 @@ public class NPCMerchant : MonoBehaviour
         if (player.money >= buffCost)
         {
             player.money -= buffCost;
-            player.currentHp = player.maxHp;
-            player.currentMana = player.maxMana;
-            player.currentStamina = player.maxStamina;
+            player.maxHp += 50f;
+            player.maxMana += 50f;
+            player.maxStamina += 50f;
             Debug.Log("ซื้อบัฟฟื้นฟูสำเร็จ!"); // เขาขายบัฟฟื้นฟู[cite: 1]
         }
     }

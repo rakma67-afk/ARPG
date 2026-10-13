@@ -38,8 +38,12 @@ public class PlayerController : MonoBehaviour
     [Header("Stamina & Roll Settings")]
     public float rollCost = 15f;
     public float staminaRegenRate = 15f;
-    public float staminaRegenDelay = 1f;
+    public float staminaRegenDelay = 5f;
     private float lastRollTime;
+    [Header("Health & Mana Settings")]
+    public float healthRegenRate = 5f;
+    public float manaRegenRate = 5f;
+    private float lastUseManaTime;
     [Header("Skill 1: Dash (A)")]
     public float skill1ManaCost = 5f; //[cite: 2]
     public float skill1Cooldown = 7f; //[cite: 2]
@@ -93,7 +97,7 @@ public class PlayerController : MonoBehaviour
         HandleCombatMovement(); // จัดการการวิ่งไปหาศัตรู
         HandleRoll();
         HandleSkills(); // ตรวจสอบการกดใช้สกิล
-        RegenerateStamina();
+        Regenerate();
     }
 
     void UpdateSkillCooldowns()
@@ -144,6 +148,7 @@ public class PlayerController : MonoBehaviour
     {
         currentMana -= skill2ManaCost;
         skill2Timer = skill2Cooldown;
+        lastUseManaTime = Time.time;
         FindAnyObjectByType<SoundManager>().playerSkillS(); // เล่นเสียงสกิล 2
 
         Debug.Log("ใช้ Skill 2: Slashing wave! สร้างความเสียหาย: " + skill2Damage);
@@ -177,6 +182,7 @@ public class PlayerController : MonoBehaviour
     {
         currentMana -= skill3ManaCost;
         skill3Timer = skill3Cooldown;
+        lastUseManaTime = Time.time;
         FindAnyObjectByType<SoundManager>().playerSkillD(); // เล่นเสียงสกิล 3
 
         Debug.Log("ใช้ Skill 3: Sweeping edge! สร้างความเสียหายรอบตัว: " + skill3Damage);
@@ -291,7 +297,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void RegenerateStamina()
+    void Regenerate()
     {
         if (Time.time >= lastRollTime + staminaRegenDelay)
         {
@@ -301,6 +307,22 @@ public class PlayerController : MonoBehaviour
                 if (currentStamina > maxStamina) currentStamina = maxStamina;
             }
         }
+
+        if (currentHp < maxHp)
+        {
+            currentHp += healthRegenRate * Time.deltaTime;
+            if (currentHp > maxHp) currentHp = maxHp;
+        }
+
+        if (Time.time >= lastUseManaTime + staminaRegenDelay)
+        {
+            if (currentMana < maxMana)
+            {
+                currentMana += manaRegenRate * Time.deltaTime;
+                if (currentMana > maxMana) currentMana = maxMana;
+            }
+        }
+            
     }
 
     IEnumerator RollRoutine()
@@ -313,8 +335,8 @@ public class PlayerController : MonoBehaviour
         float originalSpeed = agent.speed;
         float originalAcceleration = agent.acceleration;
 
-        agent.speed = 30f;
-        agent.acceleration = 100f;
+        agent.speed = 10f;
+        agent.acceleration = 30f;
 
         Vector3 rollDirection = transform.forward;
         if (agent.velocity.sqrMagnitude > 0.1f) rollDirection = agent.velocity.normalized;
@@ -322,7 +344,7 @@ public class PlayerController : MonoBehaviour
         Vector3 rollTarget = transform.position + rollDirection * 5f;
         agent.SetDestination(rollTarget);
 
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(0.7f);
 
         agent.speed = originalSpeed;
         agent.acceleration = originalAcceleration;
