@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     private NavMeshAgent agent;
     private Camera mainCamera;
+    private SoundManager soundManager;
 
     Animator animator;
 
@@ -15,7 +16,7 @@ public class PlayerController : MonoBehaviour
     public float maxStamina = 100f;
     public float baseSpeed = 10f;
     public float armor = 0f;
-    public float normalAttackDamage = 10f; // พลังโจมตีปกติ
+    public float normalAttackDamage = 25f; // พลังโจมตีปกติ
 
     [Header("Combat Settings")]
     public float attackRange = 2f; // ระยะที่ดาบฟันถึง
@@ -48,13 +49,13 @@ public class PlayerController : MonoBehaviour
     [Header("Skill 2: Slashing Wave (S)")]
     public float skill2ManaCost = 15f; //[cite: 2]
     public float skill2Cooldown = 12f; //[cite: 2]
-    public float skill2Damage = 50f; //[cite: 2]
+    public float skill2Damage = 100f; //[cite: 2]
     public float skill2Timer = 0f;
     public float waveRange = 18f; // ระยะคลื่นดาบด้านหน้า
     [Header("Skill 3: Sweeping Edge (D)")]
     public float skill3ManaCost = 10f; //[cite: 2]
     public float skill3Cooldown = 10f; //[cite: 2]
-    public float skill3Damage = 25f; //[cite: 2]
+    public float skill3Damage = 100f; //[cite: 2]
     public float skill3Timer = 0f;
     public float sweepRadius = 8f; // รัศมีโจมตีรอบตัว
 
@@ -79,6 +80,7 @@ public class PlayerController : MonoBehaviour
                 if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f)
                 {
                     animator.SetBool("moving", false);
+                    FindAnyObjectByType<SoundManager>().playerWalk(false); // หยุดเสียงเดินเมื่อถึงจุดหมาย
                 }
             }
         }
@@ -128,6 +130,7 @@ public class PlayerController : MonoBehaviour
         currentMana -= skill1ManaCost;
         skill1Timer = skill1Cooldown;
         isDashing = true;
+        FindAnyObjectByType<SoundManager>().playerSkillA(); // เล่นเสียงสกิล 1
 
         Debug.Log("ใช้ Skill 1: Dash! (มานาเหลือ: " + currentMana + ")");
         agent.speed = baseSpeed * dashSpeedMultiplier; // เพิ่มความเร็ว
@@ -141,6 +144,7 @@ public class PlayerController : MonoBehaviour
     {
         currentMana -= skill2ManaCost;
         skill2Timer = skill2Cooldown;
+        FindAnyObjectByType<SoundManager>().playerSkillS(); // เล่นเสียงสกิล 2
 
         Debug.Log("ใช้ Skill 2: Slashing wave! สร้างความเสียหาย: " + skill2Damage);
         agent.ResetPath(); // หยุดเดินเพื่อใช้สกิล
@@ -173,6 +177,7 @@ public class PlayerController : MonoBehaviour
     {
         currentMana -= skill3ManaCost;
         skill3Timer = skill3Cooldown;
+        FindAnyObjectByType<SoundManager>().playerSkillD(); // เล่นเสียงสกิล 3
 
         Debug.Log("ใช้ Skill 3: Sweeping edge! สร้างความเสียหายรอบตัว: " + skill3Damage);
         agent.ResetPath();
@@ -202,6 +207,7 @@ public class PlayerController : MonoBehaviour
             if (Physics.Raycast(ray, out hit))
             {
                 animator.SetBool("moving", true);
+               
                 // ถ้าคลิกโดนศัตรู
                 if (hit.collider.CompareTag("Enemy"))
                 {
@@ -212,7 +218,8 @@ public class PlayerController : MonoBehaviour
                 {
                     targetEnemy = null; // ยกเลิกการล็อคเป้า
                     agent.SetDestination(hit.point); // เดินไปที่พื้น
-                    
+                    FindAnyObjectByType<SoundManager>().playerWalk(true); // เล่นเสียงเดิน
+
                     Debug.Log("ตำแหน่ง "+ agent.transform.position);
                     Debug.Log("hit "+ hit.point);
                 }
@@ -248,6 +255,7 @@ public class PlayerController : MonoBehaviour
 
     void Attack()
     {
+        FindAnyObjectByType<SoundManager>().playerSlash(); // เล่นเสียงฟันดาบ
         lastAttackTime = Time.time;
 
         // หันหน้าหาศัตรูตอนฟัน
@@ -297,6 +305,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator RollRoutine()
     {
+        FindAnyObjectByType<SoundManager>().playerRoll(); // เล่นเสียงกลิ้งหลบ
         isRolling = true;
         currentStamina -= rollCost;
         lastRollTime = Time.time;
@@ -322,6 +331,7 @@ public class PlayerController : MonoBehaviour
     }
     public void TakeDamage(float damage)
     {
+        FindAnyObjectByType<SoundManager>().playerHurt(); // เล่นเสียงถูกโจมตี
         // คำนวณหักลบเกราะก่อน (ถ้าผู้เล่นซื้ออัปเกรดเกราะมาแล้ว)
         float finalDamage = Mathf.Max(damage - armor, 1f);
         currentHp -= finalDamage;
