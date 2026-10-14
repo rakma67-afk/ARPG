@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
 
     [Header("Status Bars")]
     public Slider hpSlider;
+    public TextMeshProUGUI hpText; // ช่องใส่ UI HP
     public Slider manaSlider;
     public Slider staminaSlider;
 
@@ -56,11 +57,12 @@ public class UIManager : MonoBehaviour
 
         // อัปเดตการแสดงผลของหลอด HP, Mana, Stamina ตลอดเวลา[cite: 3]
         hpSlider.value = player.currentHp;
+        hpText.text = "HP : " + (int)player.currentHp + " / " + player.maxHp; // แสดงค่า HP ปัจจุบันและ Max HP
         manaSlider.value = player.currentMana;
         staminaSlider.value = player.currentStamina;
 
-        if (levelText != null) levelText.text = "Level: " + player.level;
-        if (moneyText != null) moneyText.text = "Money: " + player.money;
+        if (levelText != null) levelText.text = "Level : " + player.level;
+        if (moneyText != null) moneyText.text = "Money : " + player.money;
 
         // ให้หลอดค่อยๆ ลดลงตามเวลา Cooldown ที่เหลืออยู่
         skill1Slider.value = player.skill1Timer;

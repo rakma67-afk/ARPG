@@ -41,8 +41,8 @@ public class PlayerController : MonoBehaviour
     public float staminaRegenDelay = 5f;
     private float lastRollTime;
     [Header("Health & Mana Settings")]
-    public float healthRegenRate = 5f;
-    public float manaRegenRate = 5f;
+    public float healthRegenRate = 2f;
+    public float manaRegenRate = 2f;
     private float lastUseManaTime;
     [Header("Skill 1: Dash (A)")]
     public float skill1ManaCost = 5f; //[cite: 2]
