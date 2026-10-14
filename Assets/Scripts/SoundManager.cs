@@ -84,7 +84,6 @@ public class SoundManager : MonoBehaviour
     }
     public void playerDead()
     {
-        sfxSources[7].Play();
         sfxSources[10].Play();
     }
     public void playerLevelUp()
@@ -112,6 +111,36 @@ public class SoundManager : MonoBehaviour
         sfxSources[15].Play();
     }
 
+    // system sound
 
-    
+    public void buttonClick()
+    {
+        sfxSources[16].Play();
+    }
+
+    public void victory()
+    {
+        sfxSources[17].Play();
+    }
+
+    public void gameOver()
+    {
+        sfxSources[7].Play();
+    }
+
+    public void upgrade()
+    {
+        sfxSources[18].Play();
+    }
+
+    public void boostState()
+    {
+        sfxSources[19].Play();
+    }
+
+    public void teleport()
+    {
+        sfxSources[20].Play();
+    }
+
 }

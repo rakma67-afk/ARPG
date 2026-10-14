@@ -4,10 +4,12 @@ using UnityEngine.AI;
 public class BossStats : MonoBehaviour
 {
     Animator animator;
+    UIManager uiManager;
 
     [Header("Boss Stats (ตาม GDD)")]
     public string bossName = "Boss";
-    public float health = 500f; //
+    public float bossMaxHealth = 500f;
+    public float health; //
     public float armor = 20f; //[cite: 3]
     public float damage = 19f; //[cite: 3]
     public float speed = 2f; //[cite: 3]
@@ -32,6 +34,10 @@ public class BossStats : MonoBehaviour
 
     void Start()
     {
+        uiManager = FindObjectOfType<UIManager>();
+
+        health = bossMaxHealth; // ตั้งค่าเลือดเริ่มต้นของบอส
+
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         if (agent != null) agent.speed = speed;
@@ -47,6 +53,8 @@ public class BossStats : MonoBehaviour
 
     void Update()
     {
+        uiManager.UpdateBossHealth(health, bossMaxHealth, isAggroed); // อัปเดตแถบเลือดบอสทุกเฟรม
+
         if (player == null) return;
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
@@ -92,6 +100,7 @@ public class BossStats : MonoBehaviour
         if (!isAggroed)
         {
             WakeUpBoss();
+            
         }
 
         // คำนวณดาเมจผ่านเกราะ บอสมีเกราะ 100 ทำให้โจมตีปกติแทบไม่เข้า
@@ -110,6 +119,8 @@ public class BossStats : MonoBehaviour
     {
         isAggroed = true;
         Debug.Log("บอสถูกปลุกแล้ว! ระวังลูกน้องมันด้วย!");
+        uiManager.UpdateBossHealth(health, bossMaxHealth, true); // อัปเดตแถบเลือดบอสเมื่อถูกตี
+        //FindAnyObjectByType<UIManager>().UpdateBossHealth(health, bossMaxHealth, true); // อัปเดตแถบเลือดบอสเมื่อถูกตี
         FindAnyObjectByType<SoundManager>().bossAggro(); // เล่นเสียงบอสโกรธ
     }
 
@@ -169,11 +180,11 @@ public class BossStats : MonoBehaviour
             pController.GainExpAndMoney(finalExpReward, moneyReward);
         }
 
-        UIManager uiManager = FindObjectOfType<UIManager>();
         if (uiManager != null)
         {
             uiManager.TriggerVictory();
         }
         Destroy(gameObject);
+        FindAnyObjectByType<SoundManager>().victory(); // เล่นเสียงผู้เล่นชนะ
     }
 }

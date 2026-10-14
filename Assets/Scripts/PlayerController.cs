@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     private Camera mainCamera;
     private SoundManager soundManager;
 
+    UIManager uiManager;
+
     Animator animator;
 
     [Header("Player Stats (ตาม GDD)")]
@@ -65,8 +67,10 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
+        uiManager = FindObjectOfType<UIManager>();
         mainCamera = Camera.main;
 
         agent.speed = baseSpeed;
@@ -363,7 +367,6 @@ public class PlayerController : MonoBehaviour
         {
             Debug.Log("ผู้เล่นตาย!");
             // ในอนาคตเราจะใส่ระบบ Game Over ที่นี่
-            UIManager uiManager = FindObjectOfType<UIManager>();
             if (uiManager != null)
             {
                 uiManager.TriggerGameOver();
@@ -396,6 +399,7 @@ public class PlayerController : MonoBehaviour
         currentExp -= maxExp;
         maxExp *= 1.2f; // เลเวลต่อไปใช้ Exp เยอะขึ้น 20%
 
+        FindAnyObjectByType<SoundManager>().playerLevelUp(); // เล่นเสียงเลเวลอัป
         // ฟื้นฟูสถานะเมื่อเลเวลอัป
         currentHp = maxHp;
         currentMana = maxMana;

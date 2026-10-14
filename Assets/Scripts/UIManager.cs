@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement; // จำเป็นสำหรับกา
 public class UIManager : MonoBehaviour
 {
     public PlayerController player; // ดึงข้อมูลตัวละครมาใช้
+    public Object boss;
     [Header("Teleport Player")]
     public Vector3 merchantPosition = new Vector3(-100, 1, -100); // กำหนดตำแหน่งที่ต้องการให้ผู้เล่นไป
 
@@ -14,6 +15,12 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI hpText; // ช่องใส่ UI HP
     public Slider manaSlider;
     public Slider staminaSlider;
+
+    [Header("Boss Stats")]
+    public TextMeshProUGUI bossHealthText;
+    public Slider bossHealthSlider;
+
+    public GameObject bossPanel; // ช่องสำหรับใส่ Prefab ของบอส
 
     [Header("Skill Cooldown Sliders")]
     public Slider skill1Slider;
@@ -30,10 +37,7 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Application.Quit();
-        }
+        
 
         // ตั้งค่าแถบสูงสุด (Max Value) ให้ตรงกับ GDD
         if (player != null)
@@ -53,6 +57,11 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
         if (player == null) return;
 
         // อัปเดตการแสดงผลของหลอด HP, Mana, Stamina ตลอดเวลา[cite: 3]
@@ -61,26 +70,60 @@ public class UIManager : MonoBehaviour
         manaSlider.value = player.currentMana;
         staminaSlider.value = player.currentStamina;
 
+
+
         if (levelText != null) levelText.text = "Level : " + player.level;
-        if (moneyText != null) moneyText.text = "Money : " + player.money;
+        if (moneyText != null) moneyText.text = "Money : " + player.money + "$";
 
         // ให้หลอดค่อยๆ ลดลงตามเวลา Cooldown ที่เหลืออยู่
         skill1Slider.value = player.skill1Timer;
         skill2Slider.value = player.skill2Timer;
         skill3Slider.value = player.skill3Timer;
+
+        UpdatePlayerStats();
+    }
+    public void UpdatePlayerStats()
+    {
+        hpSlider.maxValue = player.maxHp;
+        manaSlider.maxValue = player.maxMana;
+        staminaSlider.maxValue = player.maxStamina;
     }
     public void TriggerGameOver()
     {
         if (gameOverPanel != null) gameOverPanel.SetActive(true);
+        FindAnyObjectByType<SoundManager>().gameOver(); // เล่นเสียงเกมจบ
         //Time.timeScale = 0f; // หยุดเวลาในเกมทั้งหมด
     }
     public void TriggerVictory()
     {
         player.teleport(merchantPosition);
+        if (bossPanel != null) bossPanel.SetActive(false);
         /*
         if (victoryPanel != null) victoryPanel.SetActive(true);
         Time.timeScale = 0f; // หยุดเวลาในเกมทั้งหมด
         */
+    }
+
+    public void UpdateBossHealth(float currentHealth, float maxHealth, bool isAggro)
+    {
+        if (isAggro)
+        {
+            if (bossPanel != null) bossPanel.SetActive(true); // แสดงแถบเลือดบอสเมื่อมีบอสอยู่
+        }
+        else
+        {
+            if (bossPanel != null) bossPanel.SetActive(false); // ซ่อนแถบเลือดบอสเมื่อไม่มีบอสอยู่
+        }
+        if (bossHealthSlider != null)
+        {
+            bossHealthSlider.maxValue = maxHealth;
+            bossHealthSlider.value = currentHealth;
+        }
+        if (bossHealthText != null)
+        {
+            bossHealthText.text = "Boss HP : " + (int)currentHealth + " / " + maxHealth;
+        }
+        Debug.Log($"อัปเดตแถบเลือดบอส: {currentHealth} / {maxHealth}");
     }
     public void RestartGame()
     {

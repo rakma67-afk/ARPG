@@ -59,11 +59,14 @@ public class NPCMerchant : MonoBehaviour
             player.skill3Damage += attackBonus;
             DisplayResult.text = $"Tier [{tier}] Attack +{attackBonus}"; // อัพเกรดอาวุธที่ NPC[cite: 1]
             Debug.Log($"อัปเกรดอาวุธสำเร็จ! [{tier}] พลังโจมตี +{attackBonus}"); // อัพเกรดอาวุธที่ NPC[cite: 1]
+            if (shopPanel.activeSelf) shopPanel.SetActive(false);
+            FindAnyObjectByType<SoundManager>().upgrade(); // เล่นเสียงผู้เล่นอัพเกรดอาวุธ
         }
         else
         {
-            DisplayResult.text = "Not enough money!"; // แจ้งผู้เล่นว่ามีเงินไม่พอ
+            DisplayResult.text = $"Not enough money!\nNeed {weaponUpgradeCost}$ to reforge"; // แจ้งผู้เล่นว่ามีเงินไม่พอ
             Debug.Log("เงินไม่พอ!"); // แจ้งผู้เล่นว่ามีเงินไม่พอ
+            FindAnyObjectByType<SoundManager>().buttonClick(); // เล่นเสียงผู้เล่นเงินไม่พอ
         }
     }
 
@@ -84,11 +87,14 @@ public class NPCMerchant : MonoBehaviour
             player.armor += armorBonus;
             DisplayResult.text = $"Tier [{tier}] Armor +{armorBonus}"; // อัพเกรดชุดเกราะที่ NPC[cite: 1]
             Debug.Log($"อัปเกรดเกราะสำเร็จ! [{tier}] เกราะ +{armorBonus}"); // อัพเกรดชุดเกราะที่ NPC[cite: 1]
+            if (shopPanel.activeSelf) shopPanel.SetActive(false);
+            FindAnyObjectByType<SoundManager>().upgrade(); // เล่นเสียงผู้เล่นอัพเกรดเกราะ
         }
         else
         {
-            DisplayResult.text = "Not enough money!"; // แจ้งผู้เล่นว่ามีเงินไม่พอ
+            DisplayResult.text = $"Not enough money!\nNeed {armorUpgradeCost}$ to reforge"; // แจ้งผู้เล่นว่ามีเงินไม่พอ
             Debug.Log("เงินไม่พอ!"); // แจ้งผู้เล่นว่ามีเงินไม่พอ
+            FindAnyObjectByType<SoundManager>().buttonClick(); // เล่นเสียงผู้เล่นเงินไม่พอ
         }
     }
 
@@ -100,13 +106,19 @@ public class NPCMerchant : MonoBehaviour
             player.maxHp += 50f;
             player.maxMana += 50f;
             player.maxStamina += 50f;
+            player.currentHp = player.maxHp; // ฟื้นฟูเลือดเต็ม
+            player.currentMana = player.maxMana; // ฟื้นฟูมานาเต็ม
+            player.currentStamina = player.maxStamina; // ฟื้นฟูสตามนาเต็ม 
             DisplayResult.text = $"HP +50, MP +50, SP +50"; // เขาขายบัฟฟื้นฟู[cite: 1]
             Debug.Log("ซื้อบัฟฟื้นฟูสำเร็จ!"); // เขาขายบัฟฟื้นฟู[cite: 1]
+            if (shopPanel.activeSelf) shopPanel.SetActive(false);
+            FindAnyObjectByType<SoundManager>().boostState(); // เล่นเสียงผู้เล่นซื้อบัฟฟื้นฟู
         }
         else
         {
-            DisplayResult.text = "Not enough money!"; // แจ้งผู้เล่นว่ามีเงินไม่พอ
+            DisplayResult.text = $"Not enough money!\nNeed {buffCost}$ to stat up"; // แจ้งผู้เล่นว่ามีเงินไม่พอ
             Debug.Log("เงินไม่พอ!"); // แจ้งผู้เล่นว่ามีเงินไม่พอ
+            FindAnyObjectByType<SoundManager>().buttonClick(); // เล่นเสียงผู้เล่นเงินไม่พอ
         }
     }
 
