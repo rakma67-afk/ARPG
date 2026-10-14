@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
     public float currentExp = 0f;
     public float maxExp = 250f; // Exp ที่ต้องการเพื่ออัปเลเวล
     public int money = 0; // เงินสำหรับใช้จ่าย
+    public float score = 0f; // คะแนนสะสมสำหรับการเล่น
 
     [Header("Stamina & Roll Settings")]
     public float rollCost = 15f;
@@ -385,6 +386,7 @@ public class PlayerController : MonoBehaviour
     {
         money += moneyAmount;
         currentExp += expAmount;
+        score += expAmount; // เพิ่มคะแนนสะสมตาม Exp ที่ได้รับ
         Debug.Log($"ได้รับ Exp: {expAmount} และเงิน: {moneyAmount} (เงินรวม: {money})");
 
         if (currentExp >= maxExp)
@@ -414,5 +416,6 @@ public class PlayerController : MonoBehaviour
         transform.position = position;
         agent.Warp(position); // ใช้ Warp เพื่อให้ NavMeshAgent รู้ว่าตำแหน่งเปลี่ยน
         Debug.Log("ผู้เล่นถูกเทเลพอร์ตไปยังตำแหน่ง: " + position);
+        FindAnyObjectByType<SoundManager>().teleport(); // เล่นเสียงเทเลพอร์ต
     }
 }

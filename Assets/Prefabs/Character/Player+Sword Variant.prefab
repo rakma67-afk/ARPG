@@ -128,6 +128,7 @@ MonoBehaviour:
   currentExp: 0
   maxExp: 250
   money: 0
+  score: 0
   rollCost: 15
   staminaRegenRate: 15
   staminaRegenDelay: 1
@@ -142,7 +143,7 @@ MonoBehaviour:
   skill2Cooldown: 12
   skill2Damage: 100
   skill2Timer: 0
-  waveRange: 18
+  waveRange: 10
   skill3ManaCost: 10
   skill3Cooldown: 10
   skill3Damage: 100

@@ -2,11 +2,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro; // ใช้บรรทัดนี้ถ้าคุณใช้ TextMeshPro (ถ้าใช้ Text ธรรมดาให้เปลี่ยนเป็น using UnityEngine.UI;)
 using UnityEngine.SceneManagement; // จำเป็นสำหรับการรีสตาร์ทฉาก
+using System.Collections; // จำเป็นสำหรับการใช้ Coroutine
 
 public class UIManager : MonoBehaviour
 {
     public PlayerController player; // ดึงข้อมูลตัวละครมาใช้
-    public Object boss;
     [Header("Teleport Player")]
     public Vector3 merchantPosition = new Vector3(-100, 1, -100); // กำหนดตำแหน่งที่ต้องการให้ผู้เล่นไป
 
@@ -15,6 +15,7 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI hpText; // ช่องใส่ UI HP
     public Slider manaSlider;
     public Slider staminaSlider;
+    public TextMeshProUGUI scoreText;
 
     [Header("Boss Stats")]
     public TextMeshProUGUI bossHealthText;
@@ -70,7 +71,7 @@ public class UIManager : MonoBehaviour
         manaSlider.value = player.currentMana;
         staminaSlider.value = player.currentStamina;
 
-
+        scoreText.text = "Score : " + (int)player.score; // แสดงคะแนนสะสมของผู้เล่น
 
         if (levelText != null) levelText.text = "Level : " + player.level;
         if (moneyText != null) moneyText.text = "Money : " + player.money + "$";
@@ -90,9 +91,60 @@ public class UIManager : MonoBehaviour
     }
     public void TriggerGameOver()
     {
-        if (gameOverPanel != null) gameOverPanel.SetActive(true);
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(true);
+            StartCoroutine(FadeInPanel(gameOverPanel));
+            StartCoroutine(Delay());
+        }
+
         FindAnyObjectByType<SoundManager>().gameOver(); // เล่นเสียงเกมจบ
-        //Time.timeScale = 0f; // หยุดเวลาในเกมทั้งหมด
+    }
+
+    public void ___()
+    {
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(true);
+            StartCoroutine(FadeInPanel(gameOverPanel));
+            StartCoroutine(_____());
+        }
+    }
+
+    IEnumerator _____()
+    {
+        yield return new WaitForSecondsRealtime(1.5f);
+
+        PlayGame();
+    }
+
+    private IEnumerator Delay()
+    {
+        // หน่วงเวลา 3 วิ โดยไม่สนใจ Time.timeScale
+        yield return new WaitForSecondsRealtime(1.5f);
+
+        Time.timeScale = 0f;
+    }
+    private IEnumerator FadeInPanel(GameObject panel)
+    {
+        CanvasGroup canvasGroup = panel.GetComponent<CanvasGroup>();
+        if (canvasGroup == null) canvasGroup = panel.AddComponent<CanvasGroup>();
+
+        canvasGroup.alpha = 0f;
+        canvasGroup.interactable = false;
+
+        float duration = 1.5f; // เวลาในการเฟด
+        float t = 0f;
+
+        while (t < duration)
+        {
+            t += Time.unscaledDeltaTime; // ใช้ unscaled เพราะ Time.timeScale = 0
+            canvasGroup.alpha = Mathf.Lerp(0f, 1f, t / duration);
+            yield return null;
+        }
+
+        canvasGroup.alpha = 1f;
+        canvasGroup.interactable = true;
     }
     public void TriggerVictory()
     {
@@ -129,6 +181,18 @@ public class UIManager : MonoBehaviour
     {
         Time.timeScale = 1f; // คืนค่าเวลาให้เดินปกติก่อนโหลดฉากใหม่
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // โหลดฉากปัจจุบันซ้ำ
+    }
+
+    public void ReturnToMainMenu()
+    {
+        Time.timeScale = 1f; // คืนค่าเวลาให้เดินปกติก่อนโหลดฉากใหม่
+        SceneManager.LoadScene(0);
+    }
+
+    public void PlayGame()
+    {
+        Time.timeScale = 1f; // คืนค่าเวลาให้เดินปกติก่อนโหลดฉากใหม่
+        SceneManager.LoadScene(1);
     }
 
     public void QuitGame()

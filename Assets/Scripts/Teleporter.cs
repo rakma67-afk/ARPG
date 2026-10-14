@@ -26,6 +26,7 @@ public class Teleporter : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.E))
             {
                 player.teleport(new Vector3(0, 1, -20)); // ย้ายผู้เล่นไปยังตำแหน่งที่กำหนด)
+                FindAnyObjectByType<Spawner>().SpawnBoss(); // เรียกใช้ฟังก์ชัน SpawnBoss() ของสคริปต์ Spawner
             }
         }
         else

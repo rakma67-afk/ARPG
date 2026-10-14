@@ -143,4 +143,9 @@ public class SoundManager : MonoBehaviour
         sfxSources[20].Play();
     }
 
+    public void playGameButton()
+    {
+        sfxSources[21].Play();
+    }
+
 }
