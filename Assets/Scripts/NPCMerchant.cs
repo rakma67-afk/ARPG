@@ -1,17 +1,20 @@
 using UnityEngine;
+using TMPro; // ใช้บรรทัดนี้ถ้าคุณใช้ TextMeshPro (ถ้าใช้ Text ธรรมดาให้เปลี่ยนเป็น using UnityEngine.UI;)
 
 public class NPCMerchant : MonoBehaviour
 {
     public float interactRange = 3f;
     private PlayerController player;
+    UIManager uiManager;
 
     [Header("UI Shop")]
     public GameObject shopPanel; // นำ NPCShopPanel มาใส่ช่องนี้
+    public TextMeshProUGUI DisplayResult; // ช่องสำหรับแสดงผลลัพธ์การซื้อขาย
 
     [Header("Shop Prices")]
-    public int weaponUpgradeCost = 50;
-    public int armorUpgradeCost = 50;
-    public int buffCost = 20;
+    public int weaponUpgradeCost = 200;
+    public int armorUpgradeCost = 200;
+    public int buffCost = 50;
 
     void Start()
     {
@@ -46,13 +49,24 @@ public class NPCMerchant : MonoBehaviour
             float attackBonus = 0f;
             string tier = "";
 
-            if (randomRoll <= 20) { tier = "แย่"; attackBonus = 2f; } // สุ่มการอัพเกรด[cite: 1]
-            else if (randomRoll <= 60) { tier = "ธรรมดา"; attackBonus = 5f; }
-            else if (randomRoll <= 90) { tier = "ดี"; attackBonus = 10f; }
-            else { tier = "เลิศ"; attackBonus = 25f; }
+            if (randomRoll <= 20) { tier = "Bad"; attackBonus = 2f; } // สุ่มการอัพเกรด[cite: 1]
+            else if (randomRoll <= 60) { tier = "Good"; attackBonus = 5f; }
+            else if (randomRoll <= 90) { tier = "Great"; attackBonus = 10f; }
+            else { tier = "Legendary"; attackBonus = 25f; }
 
             player.normalAttackDamage += attackBonus;
+            player.skill2Damage += attackBonus;
+            player.skill3Damage += attackBonus;
+            DisplayResult.text = $"Tier [{tier}] Attack +{attackBonus}"; // อัพเกรดอาวุธที่ NPC[cite: 1]
             Debug.Log($"อัปเกรดอาวุธสำเร็จ! [{tier}] พลังโจมตี +{attackBonus}"); // อัพเกรดอาวุธที่ NPC[cite: 1]
+            if (shopPanel.activeSelf) shopPanel.SetActive(false);
+            FindAnyObjectByType<SoundManager>().upgrade(); // เล่นเสียงผู้เล่นอัพเกรดอาวุธ
+        }
+        else
+        {
+            DisplayResult.text = $"Not enough money!\nNeed {weaponUpgradeCost}$ to reforge"; // แจ้งผู้เล่นว่ามีเงินไม่พอ
+            Debug.Log("เงินไม่พอ!"); // แจ้งผู้เล่นว่ามีเงินไม่พอ
+            FindAnyObjectByType<SoundManager>().buttonClick(); // เล่นเสียงผู้เล่นเงินไม่พอ
         }
     }
 
@@ -65,13 +79,22 @@ public class NPCMerchant : MonoBehaviour
             float armorBonus = 0f;
             string tier = "";
 
-            if (randomRoll <= 20) { tier = "แย่"; armorBonus = 1f; }
-            else if (randomRoll <= 60) { tier = "ธรรมดา"; armorBonus = 3f; }
-            else if (randomRoll <= 90) { tier = "ดี"; armorBonus = 5f; }
-            else { tier = "เลิศ"; armorBonus = 15f; }
+            if (randomRoll <= 20) { tier = "Bad"; armorBonus = 1f; }
+            else if (randomRoll <= 60) { tier = "Good"; armorBonus = 3f; }
+            else if (randomRoll <= 90) { tier = "Great"; armorBonus = 5f; }
+            else { tier = "Legendary"; armorBonus = 15f; }
 
             player.armor += armorBonus;
+            DisplayResult.text = $"Tier [{tier}] Armor +{armorBonus}"; // อัพเกรดชุดเกราะที่ NPC[cite: 1]
             Debug.Log($"อัปเกรดเกราะสำเร็จ! [{tier}] เกราะ +{armorBonus}"); // อัพเกรดชุดเกราะที่ NPC[cite: 1]
+            if (shopPanel.activeSelf) shopPanel.SetActive(false);
+            FindAnyObjectByType<SoundManager>().upgrade(); // เล่นเสียงผู้เล่นอัพเกรดเกราะ
+        }
+        else
+        {
+            DisplayResult.text = $"Not enough money!\nNeed {armorUpgradeCost}$ to reforge"; // แจ้งผู้เล่นว่ามีเงินไม่พอ
+            Debug.Log("เงินไม่พอ!"); // แจ้งผู้เล่นว่ามีเงินไม่พอ
+            FindAnyObjectByType<SoundManager>().buttonClick(); // เล่นเสียงผู้เล่นเงินไม่พอ
         }
     }
 
@@ -80,10 +103,24 @@ public class NPCMerchant : MonoBehaviour
         if (player.money >= buffCost)
         {
             player.money -= buffCost;
-            player.currentHp = player.maxHp;
-            player.currentMana = player.maxMana;
-            player.currentStamina = player.maxStamina;
+            player.maxHp += 50f;
+            player.maxMana += 50f;
+            player.maxStamina += 50f;
+            player.currentHp = player.maxHp; // ฟื้นฟูเลือดเต็ม
+            player.currentMana = player.maxMana; // ฟื้นฟูมานาเต็ม
+            player.currentStamina = player.maxStamina; // ฟื้นฟูสตามนาเต็ม 
+            DisplayResult.text = $"HP +50, MP +50, SP +50"; // เขาขายบัฟฟื้นฟู[cite: 1]
             Debug.Log("ซื้อบัฟฟื้นฟูสำเร็จ!"); // เขาขายบัฟฟื้นฟู[cite: 1]
+            if (shopPanel.activeSelf) shopPanel.SetActive(false);
+            FindAnyObjectByType<SoundManager>().boostState(); // เล่นเสียงผู้เล่นซื้อบัฟฟื้นฟู
+        }
+        else
+        {
+            DisplayResult.text = $"Not enough money!\nNeed {buffCost}$ to stat up"; // แจ้งผู้เล่นว่ามีเงินไม่พอ
+            Debug.Log("เงินไม่พอ!"); // แจ้งผู้เล่นว่ามีเงินไม่พอ
+            FindAnyObjectByType<SoundManager>().buttonClick(); // เล่นเสียงผู้เล่นเงินไม่พอ
         }
     }
+
+    
 }

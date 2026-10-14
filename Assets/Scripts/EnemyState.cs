@@ -5,6 +5,8 @@ public class EnemyStats : MonoBehaviour
 {
     Animator animator;
 
+    SoundManager soundManager;
+
     [Header("Stats (ตาม GDD)")]
     public string enemyName = "Minion";
     public float health = 50f; //[cite: 2]
@@ -29,6 +31,9 @@ public class EnemyStats : MonoBehaviour
         animator = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
         if (agent != null) agent.speed = speed;
+        
+        soundManager = FindAnyObjectByType<SoundManager>();
+        soundManager.enemygrowl(); // เล่นเสียงศัตรูโกรธ
 
         // ค้นหาผู้เล่นอัตโนมัติจาก Tag "Player"
         if (player == null)
@@ -75,10 +80,12 @@ public class EnemyStats : MonoBehaviour
     {
         // เงื่อนไขที่ 2: ถ้าถูกโจมตี (เช่นโดนสกิลยิงไกล) ให้โกรธและหันมาวิ่งไล่ทันที
         isAggroed = true;
+        
 
         float finalDamage = Mathf.Max(damageAmount - armor, 1f);
         health -= finalDamage;
         Debug.Log($"{enemyName} โดนฟัน! เลือดเหลือ: {health}");
+        FindAnyObjectByType<SoundManager>().enemyHurt(); // เล่นเสียงโดนโจมตี
 
         if (health <= 0)
         {
@@ -98,12 +105,14 @@ public class EnemyStats : MonoBehaviour
         if (pController != null)
         {
             pController.TakeDamage(damage);
+            FindAnyObjectByType<SoundManager>().enemyAttack(); // เล่นเสียงผู้เล่นโดนโจมตี
         }
     }
 
     void Die()
     {
         Debug.Log($"{enemyName} ถูกสังหารแล้ว!");
+        FindAnyObjectByType<SoundManager>().enemyDie(); // เล่นเสียงศัตรูตาย
         PlayerController pController = player.GetComponent<PlayerController>();
         if (pController != null)
         {
