@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement; // จำเป็นสำหรับกา
 public class UIManager : MonoBehaviour
 {
     public PlayerController player; // ดึงข้อมูลตัวละครมาใช้
+    [Header("Teleport Player")]
+    public Vector3 merchantPosition = new Vector3(-100, 1, -100); // กำหนดตำแหน่งที่ต้องการให้ผู้เล่นไป
 
     [Header("Status Bars")]
     public Slider hpSlider;
@@ -27,6 +29,11 @@ public class UIManager : MonoBehaviour
 
     void Start()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
         // ตั้งค่าแถบสูงสุด (Max Value) ให้ตรงกับ GDD
         if (player != null)
         {
@@ -67,12 +74,21 @@ public class UIManager : MonoBehaviour
     }
     public void TriggerVictory()
     {
+        player.teleport(merchantPosition);
+        /*
         if (victoryPanel != null) victoryPanel.SetActive(true);
         Time.timeScale = 0f; // หยุดเวลาในเกมทั้งหมด
+        */
     }
     public void RestartGame()
     {
         Time.timeScale = 1f; // คืนค่าเวลาให้เดินปกติก่อนโหลดฉากใหม่
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // โหลดฉากปัจจุบันซ้ำ
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+        Debug.Log("เกมถูกปิดแล้ว"); // แสดงข้อความใน Console เพื่อยืนยันว่าฟังก์ชันทำงาน
     }
 }

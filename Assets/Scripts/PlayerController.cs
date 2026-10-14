@@ -403,4 +403,12 @@ public class PlayerController : MonoBehaviour
 
         Debug.Log($"Level Up! ตอนนี้คุณเลเวล {level} แล้ว");
     }
+
+    public void teleport(Vector3 position)
+    {
+        // ย้ายผู้เล่นไปยังตำแหน่งที่กำหนด
+        transform.position = position;
+        agent.Warp(position); // ใช้ Warp เพื่อให้ NavMeshAgent รู้ว่าตำแหน่งเปลี่ยน
+        Debug.Log("ผู้เล่นถูกเทเลพอร์ตไปยังตำแหน่ง: " + position);
+    }
 }

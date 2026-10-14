@@ -1,0 +1,36 @@
+using Unity.AI.Assistant.Agents;
+using UnityEngine;
+using TMPro; // ใช้บรรทัดนี้ถ้าคุณใช้ TextMeshPro (ถ้าใช้ Text ธรรมดาให้เปลี่ยนเป็น using UnityEngine.UI;)
+
+public class Teleporter : MonoBehaviour
+{
+    public float interactRange = 3f;
+    private PlayerController player;
+
+    public GameObject exitGate;
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        GameObject p = GameObject.FindGameObjectWithTag("Player");
+        if (p != null) player = p.GetComponent<PlayerController>();
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Vector3.Distance(transform.position, player.transform.position) <= interactRange)
+        {
+            exitGate.SetActive(true);
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                player.teleport(new Vector3(0, 1, -20)); // ย้ายผู้เล่นไปยังตำแหน่งที่กำหนด)
+            }
+        }
+        else
+        {
+            exitGate.SetActive(false);
+        }
+    }
+}
