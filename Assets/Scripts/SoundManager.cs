@@ -20,6 +20,7 @@ public class SoundManager : MonoBehaviour
                 bgm = gameObject.AddComponent<AudioSource>();
                 bgm.clip = bgms[i];
                 bgm.loop = true;
+                bgm.volume = 0.20f;
                 bgm.Play();
             }
         }
@@ -89,6 +90,26 @@ public class SoundManager : MonoBehaviour
     public void playerLevelUp()
     {
         sfxSources[8].Play();
+    }
+    public void enemyHurt()
+    {
+        sfxSources[11].Play();
+    }
+    public void enemyAttack()
+    {
+        sfxSources[12].Play();
+    }
+    public void enemygrowl()
+    {
+        sfxSources[13].Play();
+    }
+    public void bossAggro()
+    {
+        sfxSources[14].Play();
+    }
+    public void enemyDie()
+    {
+        sfxSources[15].Play();
     }
 
 

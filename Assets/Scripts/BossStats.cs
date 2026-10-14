@@ -10,7 +10,7 @@ public class BossStats : MonoBehaviour
     public float health = 500f; //
     public float armor = 20f; //[cite: 3]
     public float damage = 19f; //[cite: 3]
-    public float speed = 5f; //[cite: 3]
+    public float speed = 2f; //[cite: 3]
     public int minionSpawnCount = 5;
     public float expReward = 200f;
     public int moneyReward = 100;
@@ -25,7 +25,7 @@ public class BossStats : MonoBehaviour
 
     [Header("Minion Spawning")]
     public GameObject minionPrefab; // ช่องสำหรับใส่ Prefab ลูกน้อง
-    public float spawnInterval = 10f; // เรียก Minion ทุกๆ 10 วินาที
+    public float spawnInterval = 30f; // เรียก Minion ทุกๆ 30 วินาที
     private float spawnTimer;
 
     private NavMeshAgent agent;
@@ -98,6 +98,7 @@ public class BossStats : MonoBehaviour
         float finalDamage = Mathf.Max(damageAmount - armor, 1f);
         health -= finalDamage;
         Debug.Log($"{bossName} โดนฟัน! เลือดเหลือ: {health}");
+        FindAnyObjectByType<SoundManager>().enemyHurt(); // เล่นเสียงโดนโจมตี
 
         if (health <= 0)
         {
@@ -109,6 +110,7 @@ public class BossStats : MonoBehaviour
     {
         isAggroed = true;
         Debug.Log("บอสถูกปลุกแล้ว! ระวังลูกน้องมันด้วย!");
+        FindAnyObjectByType<SoundManager>().bossAggro(); // เล่นเสียงบอสโกรธ
     }
 
     void AttackPlayer()
@@ -120,10 +122,12 @@ public class BossStats : MonoBehaviour
 
         PlayerController pController = player.GetComponent<PlayerController>();
         if (pController != null) pController.TakeDamage(damage);
+        FindAnyObjectByType<SoundManager>().enemyAttack(); // เล่นเสียงผู้เล่นโดนโจมตี
     }
 
     void SpawnMinion()
     {
+        FindAnyObjectByType<SoundManager>().bossAggro(); // เล่นเสียงบอสโกรธ
         if (minionPrefab != null)
         {
             int bonusSpawns = 0;
@@ -152,6 +156,7 @@ public class BossStats : MonoBehaviour
     void Die()
     {
         Debug.Log($"{bossName} ถูกสังหาร! ชัยชนะเป็นของคุณ!"); // ตามเป้าหมายเกม สังหารบอสเพื่อชัยชนะ
+        FindAnyObjectByType<SoundManager>().enemyDie(); // เล่นเสียงศัตรูตาย
         PlayerController pController = player.GetComponent<PlayerController>();
         if (pController != null)
         {
