@@ -118,6 +118,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A) && skill1Timer <= 0 && currentMana >= skill1ManaCost)
         {
             StartCoroutine(Skill1DashRoutine());
+            animator.SetTrigger("skill1");
         }
 
         // Skill 2: Slashing wave (ปุ่ม S)[cite: 2, 3]
