@@ -39,7 +39,7 @@ public class BossStats : MonoBehaviour
     {
         uiManager = FindObjectOfType<UIManager>();
         playerController = FindObjectOfType<PlayerController>();
-        addBossHealth(); // เรียกฟังก์ชันเพิ่มเลือดบอสตามเลเวลผู้เล่น
+        addStatus(); // เรียกฟังก์ชันเพิ่มเลือดบอสตามเลเวลผู้เล่น
 
         health = bossMaxHealth; // ตั้งค่าเลือดเริ่มต้นของบอส
 
@@ -152,7 +152,7 @@ public class BossStats : MonoBehaviour
             // ถ้าดึงข้อมูลผู้เล่นได้ ให้นำเลเวลมาหาร 5 เพื่อเป็นจำนวนลูกน้องที่เพิ่มขึ้น
             if (playerController != null)
             {
-                bonusSpawns = playerController.level / 5;
+                bonusSpawns = (playerController.level / 5) * 2; // ทุกๆ 5 เลเวลของผู้เล่น จะเรียกลูกน้องเพิ่มอีก 2 ตัว
             }
 
             // จำนวนที่เรียกจริง = ค่าพื้นฐาน + โบนัสเลเวล
@@ -193,13 +193,20 @@ public class BossStats : MonoBehaviour
         FindAnyObjectByType<SoundManager>().victory(); // เล่นเสียงผู้เล่นชนะ
     }
 
-    public void addBossHealth()
+    public void addStatus()
     {
         if (playerController != null)
         {
             // เพิ่มเลือดบอสตามเลเวลผู้เล่น
             heatlhBonus = playerController.level * (health / 10f); // ทุกๆ เลเวลของผู้เล่น เพิ่มเลือดบอส 10 หน่วย
             bossMaxHealth += heatlhBonus;
+
+            // เพิ่มความเสียหายบอสตามเลเวลผู้เล่น
+            damage += playerController.level * 5f; // ทุกๆ เลเวลของผู้เล่น เพิ่มความเสียหายบอส 5 หน่วย
+
+            // เพิ่มเกราะบอสตามเลเวลผู้เล่น
+            armor += playerController.level * 2f; // ทุกๆ เลเวลของผู้เล่น เพิ่มเกราะบอส 2 หน่วย
+
         }
         Debug.Log($"{bossName} ได้รับการฟื้นฟูเลือด! เลือดปัจจุบัน: {health}");
     }
