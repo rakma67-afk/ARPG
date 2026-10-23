@@ -186,7 +186,7 @@ public class UIManager : MonoBehaviour
     public void ReturnToMainMenu()
     {
         Time.timeScale = 1f; // คืนค่าเวลาให้เดินปกติก่อนโหลดฉากใหม่
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(2);
     }
 
     public void PlayGame()

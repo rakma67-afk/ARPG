@@ -6,6 +6,8 @@ public class BossStats : MonoBehaviour
     Animator animator;
     UIManager uiManager;
 
+    PlayerController playerController;
+
     [Header("Boss Stats (ตาม GDD)")]
     public string bossName = "Boss";
     public float bossMaxHealth = 500f;
@@ -16,6 +18,7 @@ public class BossStats : MonoBehaviour
     public int minionSpawnCount = 5;
     public float expReward = 200f;
     public int moneyReward = 100;
+    float heatlhBonus = 0f; // ตัวแปรสำหรับเก็บโบนัสเลือดจากเลเวลผู้เล่น
 
     [Header("AI Settings")]
     public Transform player;
@@ -35,6 +38,8 @@ public class BossStats : MonoBehaviour
     void Start()
     {
         uiManager = FindObjectOfType<UIManager>();
+        playerController = FindObjectOfType<PlayerController>();
+        addBossHealth(); // เรียกฟังก์ชันเพิ่มเลือดบอสตามเลเวลผู้เล่น
 
         health = bossMaxHealth; // ตั้งค่าเลือดเริ่มต้นของบอส
 
@@ -49,6 +54,7 @@ public class BossStats : MonoBehaviour
         }
 
         spawnTimer = spawnInterval; // เริ่มนับเวลาถอยหลัง
+
     }
 
     void Update()
@@ -142,12 +148,11 @@ public class BossStats : MonoBehaviour
         if (minionPrefab != null)
         {
             int bonusSpawns = 0;
-            PlayerController pController = player.GetComponent<PlayerController>();
 
             // ถ้าดึงข้อมูลผู้เล่นได้ ให้นำเลเวลมาหาร 5 เพื่อเป็นจำนวนลูกน้องที่เพิ่มขึ้น
-            if (pController != null)
+            if (playerController != null)
             {
-                bonusSpawns = pController.level / 5;
+                bonusSpawns = playerController.level / 5;
             }
 
             // จำนวนที่เรียกจริง = ค่าพื้นฐาน + โบนัสเลเวล
@@ -186,5 +191,16 @@ public class BossStats : MonoBehaviour
         }
         Destroy(gameObject);
         FindAnyObjectByType<SoundManager>().victory(); // เล่นเสียงผู้เล่นชนะ
+    }
+
+    public void addBossHealth()
+    {
+        if (playerController != null)
+        {
+            // เพิ่มเลือดบอสตามเลเวลผู้เล่น
+            heatlhBonus = playerController.level * (health / 10f); // ทุกๆ เลเวลของผู้เล่น เพิ่มเลือดบอส 10 หน่วย
+            bossMaxHealth += heatlhBonus;
+        }
+        Debug.Log($"{bossName} ได้รับการฟื้นฟูเลือด! เลือดปัจจุบัน: {health}");
     }
 }
