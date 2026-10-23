@@ -11,6 +11,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/FullGame.unity
     guid: e5da185ea85aa244d8585c2183b2c2f4
+  - enabled: 1
+    path: Assets/Scenes/Menu 1.unity
+    guid: 975fc72ce27dd884ab364f1c03a658ab
   m_configObjects:
     com.unity.dt.app-ui: {fileID: 11400000, guid: 1b1c20d82303e4b5781c3ef50ac1449f, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

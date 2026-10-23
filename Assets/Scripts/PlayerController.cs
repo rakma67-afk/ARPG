@@ -6,8 +6,7 @@ public class PlayerController : MonoBehaviour
 {
     private NavMeshAgent agent;
     private Camera mainCamera;
-    private SoundManager soundManager;
-
+    
     UIManager uiManager;
 
     Animator animator;
@@ -32,7 +31,7 @@ public class PlayerController : MonoBehaviour
     private bool isRolling = false;
     private bool isDashing = false; // สำหรับเช็กสถานะสกิล 1
     public float currentHp;
-    public int level = 1;
+    public int level = 0;
     public float currentExp = 0f;
     public float maxExp = 250f; // Exp ที่ต้องการเพื่ออัปเลเวล
     public int money = 0; // เงินสำหรับใช้จ่าย
