@@ -1,6 +1,4 @@
-using Unity.AI.Assistant.Agents;
 using UnityEngine;
-using TMPro; // ใช้บรรทัดนี้ถ้าคุณใช้ TextMeshPro (ถ้าใช้ Text ธรรมดาให้เปลี่ยนเป็น using UnityEngine.UI;)
 
 public class Teleporter : MonoBehaviour
 {
